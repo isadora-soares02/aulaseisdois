@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { evaluate } from "mathjs";
 import "./App.css";
 
 function Card({ title, children }) {
@@ -109,17 +110,19 @@ function CalculatorPage() {
     "0",".","=","+"
   ];
 
-  const handleClick = (btn) => {
-    if (btn === "=") {
-      try {
-        setValue(eval(value).toString());
-      } catch {
-        setValue("Erro");
-      }
-    } else {
-      setValue(value + btn);
+
+
+const handleClick = (btn) => {
+  if (btn === "=") {
+    try {
+      setValue(evaluate(value).toString());
+    } catch {
+      setValue("Erro");
     }
-  };
+  } else {
+    setValue(value + btn);
+  }
+};
 
   return (
     <Card title="Calculadora">
