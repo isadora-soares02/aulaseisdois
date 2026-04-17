@@ -14,18 +14,59 @@ function Card({ title, children }) {
 function TodoPage() {
   const [task, setTask] = useState("");
   const [tasks, setTasks] = useState([]);
+  const [editIndex, setEditIndex] = useState(null);
 
   const addTask = () => {
     if (!task.trim()) return;
-    setTasks([...tasks, task]);
+
+    if (editIndex !== null) {
+      const updated = [...tasks];
+      updated[editIndex] = task;
+      setTasks(updated);
+      setEditIndex(null);
+    } else {
+      setTasks([...tasks, task]);
+    }
+
     setTask("");
+  };
+
+  const deleteTask = (index) => {
+    const updated = tasks.filter((_, i) => i !== index);
+    setTasks(updated);
+  };
+
+  const editTask = (index) => {
+    setTask(tasks[index]);
+    setEditIndex(index);
   };
 
   return (
     <Card title="To-Do List">
-      <input className="input" value={task} onChange={(e) => setTask(e.target.value)} placeholder="Digite uma tarefa" />
-      <button className="button" onClick={addTask}>Adicionar</button>
-      <ul>{tasks.map((t, i) => <li key={i}>{t}</li>)}</ul>
+      <input
+        className="input"
+        value={task}
+        onChange={(e) => setTask(e.target.value)}
+        placeholder="Digite uma tarefa"
+      />
+
+      <button className="button" onClick={addTask}>
+        {editIndex !== null ? "Salvar" : "Adicionar"}
+      </button>
+
+      <ul>
+        {tasks.map((t, i) => (
+          <li key={i}>
+            {t}
+            <button className="button" onClick={() => editTask(i)}>
+              Editar
+            </button>
+            <button className="button" onClick={() => deleteTask(i)}>
+              Apagar
+            </button>
+          </li>
+        ))}
+      </ul>
     </Card>
   );
 }
